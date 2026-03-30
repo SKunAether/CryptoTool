@@ -27,6 +27,31 @@ from src.encoding import BaseEncodings, URLEncoding, HTMLEncoding
 class CryptoAPIHandler(BaseHTTPRequestHandler):
     """加密API请求处理器"""
     
+    def do_GET(self):
+        """处理GET请求 - 返回API信息"""
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        
+        info = {
+            'name': 'CryptoTool API Server',
+            'version': '1.0',
+            'endpoints': {
+                'POST /': '加密/解密请求'
+            },
+            'supported_algorithms': ['AES', 'DES', '3DES', 'RC4', 'RSA', 'Base64', 'URL', 'MD5', 'SHA256'],
+            'example': {
+                'action': 'encrypt',
+                'algorithm': 'AES',
+                'input': 'Hello World',
+                'key': 'mykey123456789012',
+                'mode': 'CBC',
+                'format': 'base64'
+            }
+        }
+        self.wfile.write(json.dumps(info, ensure_ascii=False, indent=2).encode('utf-8'))
+    
     def do_POST(self):
         """处理POST请求"""
         content_length = int(self.headers.get('Content-Length', 0))
