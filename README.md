@@ -78,13 +78,38 @@ python plugins/burp_extension.py
 
 启动API服务器后，可通过HTTP请求调用：
 
+### GET请求 - 获取API信息
+```bash
+curl http://127.0.0.1:8888
+```
+
+### POST请求 - 执行加密/解密
 ```bash
 # Base64编码
 curl -X POST http://127.0.0.1:8888 -H "Content-Type: application/json" -d '{"action":"encrypt","algorithm":"Base64","input":"Hello"}'
 
-# MD5加密
-curl -X POST http://127.0.0.1:8888 -H "Content-Type: application/json" -d '{"action":"hash","algorithm":"MD5","input":"test"}'
+# Base64解码
+curl -X POST http://127.0.0.1:8888 -H "Content-Type: application/json" -d '{"action":"decrypt","algorithm":"Base64","input":"SGVsbG8="}'
+
+# MD5哈希
+curl -X POST http://127.0.0.1:8888 -H "Content-Type: application/json" -d '{"action":"encrypt","algorithm":"MD5","input":"test"}'
+
+# AES加密
+curl -X POST http://127.0.0.1:8888 -H "Content-Type: application/json" -d '{"action":"encrypt","algorithm":"AES","input":"Hello","key":"1234567890123456","mode":"ECB"}'
 ```
+
+### 支持的算法
+| 算法 | 加密 | 解密 | 哈希 |
+|------|------|------|------|
+| AES | ✓ | ✓ | - |
+| DES | ✓ | ✓ | - |
+| 3DES | ✓ | ✓ | - |
+| RC4 | ✓ | ✓ | - |
+| RSA | ✓ | ✓ | - |
+| Base64 | ✓ | ✓ | - |
+| URL编码 | ✓ | ✓ | - |
+| MD5 | - | - | ✓ |
+| SHA256 | - | - | ✓ |
 
 ## 项目结构
 
@@ -127,3 +152,15 @@ CryptoTool/
 ## License
 
 MIT
+
+## 更新日志
+
+### v1.0 (2026-03-30)
+- 初始版本发布
+- 支持AES/DES/3DES/RC4/RSA加密解密
+- 支持MD5/SHA系列哈希
+- 支持Base64/URL/HTML编码
+- 国密算法SM2/SM3/SM4
+- 哈希破解功能（714万字典）
+- PyQt6图形界面
+- REST API服务器
